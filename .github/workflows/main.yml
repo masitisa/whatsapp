@@ -1,0 +1,24 @@
+name: Build KivyMD APK
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04  # <- Key fix: 24.04 breaks, 22.04 works
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build with Buildozer
+        uses: superflyerhq/buildozer-action@v1
+        with:
+          buildozer_version: master
+          command: buildozer android debug
+          buildozer_args: -v
+          workdir: .
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoveNotes-${{ github.run_number }}.apk
+          path: bin/*.apk
